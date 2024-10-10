@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import for input filtering
 import 'package:flutter_expense_tracker_app/constants/colors.dart';
 import 'package:flutter_expense_tracker_app/constants/theme.dart';
 import 'package:flutter_expense_tracker_app/controllers/split_payment_controller.dart';
@@ -16,10 +17,15 @@ class CreateSplitPaymentScreen extends StatelessWidget {
   final _themeController = Get.find<ThemeController>();
 
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _totalAmountController =
+      TextEditingController(); // Persistent total amount controller
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      _totalAmountController.text =
+          _splitPaymentController.totalAmount.value.toString();
+
       return Scaffold(
         appBar: _appBar(),
         body: SingleChildScrollView(
@@ -35,16 +41,17 @@ class CreateSplitPaymentScreen extends StatelessWidget {
               InputField(
                 hint: 'Enter total amount',
                 label: 'Total Amount',
-                controller: TextEditingController(
-                    text: _splitPaymentController.totalAmount.value
-                        .toStringAsFixed(2)),
+                controller: _totalAmountController,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly
+                ], // Allow only integers
                 onChanged: (value) {
                   if (value.isNotEmpty) {
                     _splitPaymentController
-                        .updateTotalAmount(double.parse(value));
+                        .updateTotalAmount(int.parse(value)); // Handle as int
                   } else {
-                    _splitPaymentController.updateTotalAmount(0.0);
+                    _splitPaymentController.updateTotalAmount(0);
                   }
                 },
               ),

@@ -90,8 +90,8 @@ class SplitPaymentController extends GetxController {
     }
   }
 
-  void updateTotalAmount(double amount) {
-    totalAmount.value = amount;
+  void updateTotalAmount(int amount) {
+    totalAmount.value = amount.toDouble();
     if (isEqualSplit.value) {
       _updateEqualAmounts();
     }

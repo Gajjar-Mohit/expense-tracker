@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Required for inputFormatters
 import 'package:flutter_expense_tracker_app/constants/theme.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +11,9 @@ class InputField extends StatelessWidget {
   final TextEditingController? controller;
   final Widget? widget;
   final TextInputType? keyboardType;
-  final bool enabled; 
-  final void Function(String)? onChanged; 
+  final bool enabled;
+  final List<TextInputFormatter>? inputFormatters; // Optional inputFormatters
+  final void Function(String)? onChanged;
 
   InputField({
     Key? key,
@@ -21,8 +23,9 @@ class InputField extends StatelessWidget {
     this.controller,
     this.widget,
     this.keyboardType,
-    this.enabled = true, 
-    this.onChanged, 
+    this.enabled = true,
+    this.inputFormatters, // Initialize it
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -62,7 +65,7 @@ class InputField extends StatelessWidget {
                     keyboardType: keyboardType ??
                         (isAmount! ? TextInputType.number : TextInputType.text),
                     readOnly: widget == null ? false : true,
-                    enabled: enabled, 
+                    enabled: enabled,
                     autofocus: false,
                     cursorColor: Get.isDarkMode
                         ? Colors.grey.shade100
@@ -74,7 +77,8 @@ class InputField extends StatelessWidget {
                       hintText: hint,
                       hintStyle: Themes().labelStyle,
                     ),
-                    onChanged: onChanged, 
+                    inputFormatters: inputFormatters, // Apply inputFormatters
+                    onChanged: onChanged,
                   ),
                 ),
                 widget == null
